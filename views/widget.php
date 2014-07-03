@@ -22,7 +22,7 @@ if ($r->have_posts()) :
 
 	if ( $name ) echo $before_title . $name . $after_title; ?>
 
-	<div class="row has-top-triangle featured-folio">
+	<div class="row featured-folio">
 
 		<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 
@@ -37,7 +37,7 @@ if ($r->have_posts()) :
 			</div>
 
 			<div class="folio-avatar">
-				<?php echo get_avatar( '88' ); ?>
+				<?php echo get_avatar( '60' ); ?>
 			</div>
 
 			<div class="folio-content">
