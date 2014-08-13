@@ -25,22 +25,9 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 	protected $widget_slug = 'infusion-recent-posts-widget';
 
-	/*--------------------------------------------------*/
-	/* Constructor
-	/*--------------------------------------------------*/
-
-	/**
-	 * Specifies the classname and description, instantiates the widget,
-	 * loads localization files, and includes necessary stylesheets and JavaScript.
-	 */
 	public function __construct() {
 
-		// load plugin text domain
 		add_action( 'init', array( $this, 'infusion_recent_posts' ) );
-
-		// Hooks fired when the Widget is activated and deactivated
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
 		parent::__construct(
 			$this->get_widget_slug(),
@@ -51,16 +38,13 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			)
 		);
 
-		// Register admin styles and scripts
 		add_action( 'admin_print_styles', array( $this, 'register_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 
-		// Register site styles and scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 
-	} // end constructor
-
+	}
 
 	/**
 	 * Return the widget slug.
@@ -71,9 +55,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 	/**
 	 * Outputs the content of the widget.
-	 *
-	 * @param array args  The array of form elements
-	 * @param array instance The current instance of the widget
 	 */
 	public function widget( $args, $instance ) {
 
@@ -152,13 +133,10 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			ob_end_flush();
 		}
 
-	} // end widget
+	} // End widget
 
 	/**
 	 * Processes the widget's options to be saved.
-	 *
-	 * @param array new_instance The new instance of values to be generated via the update.
-	 * @param array old_instance The previous instance of values before the update.
 	 */
 	public function update( $new_instance, $old_instance ) {
 
@@ -166,12 +144,10 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		return $instance;
 
-	} // end widget
+	}
 
 	/**
 	 * Generates the administration form for the widget.
-	 *
-	 * @param array instance The array of keys and values for the widget.
 	 */
 	public function form( $instance ) {
 
