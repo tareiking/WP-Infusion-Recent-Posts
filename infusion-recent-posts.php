@@ -56,8 +56,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 		/**
 		 * Filter the arguments for the Recent Posts widget.
 		 */
-
-		$r = new WP_Query( apply_filters( 'infusion_recent_posts_args', array(
+		$r = new WP_Query( apply_filters( 'infusion_recent_posts_query_args', array(
 			'posts_per_page'      => 4,
 			'no_found_rows'       => true,
 			'post_status'         => 'publish',
