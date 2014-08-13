@@ -64,13 +64,9 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			'ignore_sticky_posts' => true
 		) ) );
 
-		// Remove foundation 5 rows to get full width
-		$opentag = apply_filters( 'infusion_recent_posts_g5_opening_tag', array(
-			'markup' => '</div></div>')
-		);
-
+		// Filter for Opening Markup
+		$opentag = apply_filters( 'infusion_recent_posts_f5_opening_tag' );
 		echo $opentag['markup'];
-
 
 		if ($r->have_posts()) :
 
@@ -121,11 +117,8 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		<?php
 
-		// Remove foundation 5 rows to get full width
-		$closetag = apply_filters( 'infusion_recent_posts_f5_closing_tag', array(
-			'markup' => '<div class="row"><div class="small-12 medium-12 columns">')
-		);
-
+		// Filter for Closing Markup
+		$closetag = apply_filters( 'infusion_recent_posts_f5_closing_tag' );
 		echo $closetag['markup'];
 
 		// Reset the global $the_post as this query will have stomped on it
