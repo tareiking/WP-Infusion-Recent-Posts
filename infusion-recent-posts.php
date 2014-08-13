@@ -64,17 +64,25 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			'ignore_sticky_posts' => true
 		) ) );
 
+		// Remove foundation 5 rows to get full width
+		$opentag = apply_filters( 'infusion_recent_posts_g5_opening_tag', array(
+			'markup' => '</div></div>')
+		);
+
+		echo $opentag['markup'];
+
+
 		if ($r->have_posts()) :
 
 			echo $before_widget;
 
-			if ( $name ) echo $before_title . $name . $after_title; ?>
+			$title = apply_filters( 'widget_title', empty($instance['title']) ? '' : $instance['title'], $instance, $this->id_base );
 
-			<?php if ( '' != $widget_title ) : ?>
+			if ( '' != $title ) : ?>
 			<div class="featured-folio-header full-width-header">
 				<div class="row">
 					<div class="small-12">
-						<h3><?php _e( $widget_title ); ?></h3>
+						<h3><?php _e( $title ); ?></h3>
 					</div>
 				</div>
 			</div>
@@ -113,9 +121,17 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 			</div><!-- #featured-portfolio -->
 
-		<?php echo $after_widget; ?>
-
 		<?php
+
+		// Remove foundation 5 rows to get full width
+		$closetag = apply_filters( 'infusion_recent_posts_f5_closing_tag', array(
+			'markup' => '<div class="row"><div class="small-12 medium-12 columns">')
+		);
+
+		echo $closetag['markup'];
+
+		echo $after_widget;
+
 		// Reset the global $the_post as this query will have stomped on it
 		wp_reset_postdata();
 
