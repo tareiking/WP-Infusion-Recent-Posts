@@ -36,7 +36,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			)
 		);
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 
 	}
@@ -73,8 +73,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 
 		if ($r->have_posts()) :
-
-			echo $before_widget;
 
 			$title = apply_filters( 'widget_title', empty($instance['title']) ? '' : $instance['title'], $instance, $this->id_base );
 
@@ -129,8 +127,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 		);
 
 		echo $closetag['markup'];
-
-		echo $after_widget;
 
 		// Reset the global $the_post as this query will have stomped on it
 		wp_reset_postdata();
