@@ -27,8 +27,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 	public function __construct() {
 
-		add_action( 'init', array( $this, 'infusion_recent_posts' ) );
-
 		parent::__construct(
 			$this->get_widget_slug(),
 			__( 'Infusion Recent Posts', $this->get_widget_slug() ),
@@ -139,6 +137,9 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		$instance = $old_instance;
 
+		$instance = $old_instance;
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
 		return $instance;
 
 	}
@@ -148,6 +149,14 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
+		$title = strip_tags( $instance['title'] ); ?>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+		</p>
+		<?php
 	}
 
 	/**
