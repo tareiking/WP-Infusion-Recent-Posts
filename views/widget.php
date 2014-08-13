@@ -37,6 +37,7 @@ if ($r->have_posts()) :
 		<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 
 		<div class="small-12 medium-6 large-3 columns featured-folio-item">
+			<div class="carousel-overlay"></div>
 
 			<div class="folio-image" style="background: url(<?php echo $large_image ?>) ">
 				<?php if ( has_post_thumbnail() ) {
