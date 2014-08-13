@@ -60,28 +60,15 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 
-		// Refreshing the widget's cached output with each new post
-		add_action( 'save_post',    array( $this, 'flush_widget_cache' ) );
-		add_action( 'deleted_post', array( $this, 'flush_widget_cache' ) );
-		add_action( 'switch_theme', array( $this, 'flush_widget_cache' ) );
-
 	} // end constructor
 
 
-    /**
-     * Return the widget slug.
-     *
-     * @since    1.0.0
-     *
-     * @return    Plugin slug variable.
-     */
-    public function get_widget_slug() {
-        return $this->widget_slug;
-    }
-
-	/*--------------------------------------------------*/
-	/* Widget API Functions
-	/*--------------------------------------------------*/
+	/**
+	 * Return the widget slug.
+	 */
+	public function get_widget_slug() {
+	    return $this->widget_slug;
+	}
 
 	/**
 	 * Outputs the content of the widget.
@@ -91,46 +78,83 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
+		/**
+		 * Filter the arguments for the Recent Posts widget.
+		 */
 
-		// Check if there is a cached output
-		$cache = wp_cache_get( $this->get_widget_slug(), 'widget' );
+		$r = new WP_Query( apply_filters( 'infusion_recent_posts_args', array(
+			'posts_per_page'      => 4,
+			'no_found_rows'       => true,
+			'post_status'         => 'publish',
+			'ignore_sticky_posts' => true
+		) ) );
 
-		if ( !is_array( $cache ) )
-			$cache = array();
+		if ($r->have_posts()) :
 
-		if ( ! isset ( $args['widget_id'] ) )
-			$args['widget_id'] = $this->id;
+			echo $before_widget;
 
-		if ( isset ( $cache[ $args['widget_id'] ] ) )
-			return print $cache[ $args['widget_id'] ];
+			if ( $name ) echo $before_title . $name . $after_title; ?>
 
-		// go on with your widget logic, put everything into a string and …
+			<?php if ( '' != $widget_title ) : ?>
+			<div class="featured-folio-header full-width-header">
+				<div class="row">
+					<div class="small-12">
+						<h3><?php _e( $widget_title ); ?></h3>
+					</div>
+				</div>
+			</div>
+			<?php endif; ?>
 
+			<div class="row featured-folio">
 
-		extract( $args, EXTR_SKIP );
+				<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 
-		$widget_string = $before_widget;
+				<div class="small-12 medium-6 large-3 columns featured-folio-item">
+					<div class="carousel-overlay"></div>
 
-		// TODO: Here is where you manipulate your widget's values based on their input fields
-		ob_start();
-		include( plugin_dir_path( __FILE__ ) . 'views/widget.php' );
-		$widget_string .= ob_get_clean();
-		$widget_string .= $after_widget;
+					<div class="folio-image" style="background: url(<?php echo $large_image ?>) ">
+						<?php if ( has_post_thumbnail() ) {
+							the_post_thumbnail( 'featured_folio_thumbnail', array( 'class' => ' small-12' ) );
+						} else { ?>
+							<img class="small-12" src="<?php echo get_template_directory_uri() . '/assets/img/c02.jpg' ?>" alt="">
+						<?php } ?>
+					</div>
 
+					<div class="folio-avatar">
+						<?php echo get_avatar( '60' ); ?>
+					</div>
 
-		$cache[ $args['widget_id'] ] = $widget_string;
+					<div class="folio-content">
+						<h3>
+							<a href="<?php the_permalink(); ?>"><?php get_the_title() ? the_title() : the_ID(); ?></a>
+						</h3>
+						<p><?php the_excerpt(); ?></p>
+					</div>
 
-		wp_cache_set( $this->get_widget_slug(), $cache, 'widget' );
+				</div>
 
-		print $widget_string;
+				<!-- Old -->
+				<?php endwhile; ?>
+
+			</div><!-- #featured-portfolio -->
+
+		<?php echo $after_widget; ?>
+
+		<?php
+		// Reset the global $the_post as this query will have stomped on it
+		wp_reset_postdata();
+
+		endif;
+
+		if ( ! $this->is_preview() ) {
+			$cache[ $args['widget_id'] ] = ob_get_flush();
+			wp_cache_set( 'widget_recent_posts', $cache, 'widget' );
+		} else {
+			ob_end_flush();
+		}
 
 	} // end widget
 
-
-	public function flush_widget_cache()
-	{
-    	wp_cache_delete( $this->get_widget_slug(), 'widget' );
-	}
 	/**
 	 * Processes the widget's options to be saved.
 	 *
@@ -140,8 +164,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 
 		$instance = $old_instance;
-
-		// TODO: Here is where you update your widget's old values with the new, incoming values
 
 		return $instance;
 
@@ -154,49 +176,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		// TODO: Define default values for your variables
-		$instance = wp_parse_args(
-			(array) $instance
-		);
-
-		// TODO: Store the values of the widget in their own variable
-
-		// Display the admin form
-		include( plugin_dir_path(__FILE__) . 'views/admin.php' );
-
-	} // end form
-
-	/*--------------------------------------------------*/
-	/* Public Functions
-	/*--------------------------------------------------*/
-
-	/**
-	 * Loads the Widget's text domain for localization and translation.
-	 */
-	public function infusion_recent_posts() {
-
-		// TODO be sure to change 'widget-name' to the name of *your* plugin
-		load_plugin_textdomain( $this->get_widget_slug(), false, plugin_dir_path( __FILE__ ) . 'lang/' );
-
-	} // end infusion_recent_posts
-
-	/**
-	 * Fired when the plugin is activated.
-	 *
-	 * @param  boolean $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog.
-	 */
-	public function activate( $network_wide ) {
-		// TODO define activation functionality here
-	} // end activate
-
-	/**
-	 * Fired when the plugin is deactivated.
-	 *
-	 * @param boolean $network_wide True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog
-	 */
-	public function deactivate( $network_wide ) {
-		// TODO define deactivation functionality here
-	} // end deactivate
+	}
 
 	/**
 	 * Registers and enqueues admin-specific styles.
@@ -205,7 +185,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		wp_enqueue_style( $this->get_widget_slug().'-admin-styles', plugins_url( 'css/admin.css', __FILE__ ) );
 
-	} // end register_admin_styles
+	}
 
 	/**
 	 * Registers and enqueues admin-specific JavaScript.
@@ -214,7 +194,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		wp_enqueue_script( $this->get_widget_slug().'-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array('jquery') );
 
-	} // end register_admin_scripts
+	}
 
 	/**
 	 * Registers and enqueues widget-specific styles.
@@ -223,7 +203,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		wp_enqueue_style( $this->get_widget_slug().'-widget-styles', plugins_url( 'css/widget.css', __FILE__ ) );
 
-	} // end register_widget_styles
+	}
 
 	/**
 	 * Registers and enqueues widget-specific scripts.
@@ -232,8 +212,8 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		wp_enqueue_script( $this->get_widget_slug().'-script', plugins_url( 'js/widget.js', __FILE__ ), array('jquery') );
 
-	} // end register_widget_scripts
+	}
 
-} // end class
+}
 
 add_action( 'widgets_init', create_function( '', 'register_widget("Infusion_Recent_Posts_Widget");' ) );
