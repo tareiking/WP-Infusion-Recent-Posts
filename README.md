@@ -1,16 +1,31 @@
-# Infusion Recent Posts Widget
+=== WP Infusion Recent Posts ===
 
-- For use with Infusion Theme
+A plugin for listing recent / featured posts with a circular avatar
 
-## Roadmap
+=== Usage ===
 
-- [ ] Add post limit (default 4)
-- [ ] Add custom excerpt length
-- [ ] Re-think how .sidebar / .footer and non .content areas display (1 column, 3 column etc)
-- [x] Hover effects as per design
-- [ ] Refactor code :rocket: Widget boilerplate
+Filters:
 
-## Current Features
+- infusion_recent_posts_f5_closing_tag
+- recent_posts_opening_markup
+- infusion_recent_posts_query_args
+```
+function recent_posts_closing_markup(){
 
-- [x] Display as per design
-- [x] Somewhat responsive
+	$markup = array( 'markup' => '<div class="row"><div class="small-12 medium-12 columns">');
+
+	return $markup;
+}
+
+add_filter( 'infusion_recent_posts_f5_closing_tag', 'recent_posts_closing_markup' );
+
+
+function recent_posts_opening_markup(){
+
+	$markup = array( 'markup' => '</div></div>' );
+
+	return $markup;
+}
+
+add_filter( 'infusion_recent_posts_f5_opening_tag', 'recent_posts_opening_markup' );
+```
