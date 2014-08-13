@@ -89,7 +89,7 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 				<div class="small-12 medium-6 large-3 columns featured-folio-item">
 					<div class="carousel-overlay"></div>
 
-					<div class="folio-image" style="background: url(<?php echo $large_image ?>) ">
+					<div class="folio-image">
 						<?php if ( has_post_thumbnail() ) {
 							the_post_thumbnail( 'featured_folio_thumbnail', array( 'class' => ' small-12' ) );
 						} else { ?>
@@ -125,13 +125,6 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 		wp_reset_postdata();
 
 		endif;
-
-		if ( ! $this->is_preview() ) {
-			$cache[ $args['widget_id'] ] = ob_get_flush();
-			wp_cache_set( 'widget_recent_posts', $cache, 'widget' );
-		} else {
-			ob_end_flush();
-		}
 
 	} // End widget
 
