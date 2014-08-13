@@ -22,6 +22,16 @@ if ($r->have_posts()) :
 
 	if ( $name ) echo $before_title . $name . $after_title; ?>
 
+	<?php if ( '' != $widget_title ) : ?>
+	<div class="featured-folio-header full-width-header">
+		<div class="row">
+			<div class="small-12">
+				<h3><?php _e( $widget_title ); ?></h3>
+			</div>
+		</div>
+	</div>
+	<?php endif; ?>
+
 	<div class="row featured-folio">
 
 		<?php while ( $r->have_posts() ) : $r->the_post(); ?>
