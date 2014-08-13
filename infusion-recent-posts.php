@@ -8,13 +8,12 @@
  * @link      http://tarei.me
  * @copyright 2014 Tarei King
  *
- * @wordpress-plugin
  * Plugin Name:       Infusion Recent Posts Widget
- * Plugin URI:        @TODO
- * Description:       @TODO
+ * Plugin URI:        http://tarei.me/plugins/
+ * Description:       Displays Sticky Posts with an avatar picture and excerpt in widget areas.
  * Version:           1.0.0
- * Author:            @TODO
- * Author URI:        @TODO
+ * Author:            Tarei King
+ * Author URI:        http://tarei.me
  * Text Domain:       infusion_recent_posts
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -45,10 +44,10 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 
 		parent::__construct(
 			$this->get_widget_slug(),
-			__( 'Infusion Recent Posts Widget', $this->get_widget_slug() ),
+			__( 'Infusion Recent Posts', $this->get_widget_slug() ),
 			array(
-				'classname'  => $this->get_widget_slug().'-class',
-				'description' => __( 'Displays your recent posts with a featured image and an avatar in the center', $this->get_widget_slug() )
+				'classname'  => $this->get_widget_slug(),
+				'description' => __( 'Displays your recent posts with a featured image and an avatar in the center.', $this->get_widget_slug() )
 			)
 		);
 
