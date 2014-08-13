@@ -81,11 +81,12 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 			</div>
 			<?php endif; ?>
 
-			<div class="row featured-folio">
+			<div class="row featured-folio" data-equalizer>
 
 				<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 
-				<div class="small-12 medium-6 large-3 columns featured-folio-item">
+				<div class="small-12 medium-6 large-3 columns featured-folio-item" data-equalizer-watch>
+					<a href="<?php echo the_permalink(); ?>">
 					<div class="carousel-overlay"></div>
 
 					<div class="folio-image">
@@ -106,6 +107,8 @@ class Infusion_Recent_Posts_Widget extends WP_Widget {
 						</h3>
 						<p><?php the_excerpt(); ?></p>
 					</div>
+
+					</a>
 
 				</div>
 
